@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Una Sorpresa Speciale</title>
+    <!-- Font elegante -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-love: #ff85a1;
+            --silver-heart: #b0b0b0;
+            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #4a4a4a;
+        }
+
+        /* Schermata di Login */
+        #login-screen {
+            text-align: center;
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            z-index: 10;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .heart-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h2 {
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #eee;
+            margin-bottom: 20px;
+            outline: none;
+            text-align: center;
+            font-size: 16px; /* Evita zoom automatico su iPhone */
+            transition: border-color 0.3s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--primary-love);
+        }
+
+        button {
+            background: var(--primary-love);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 133, 161, 0.3);
+        }
+
+        /* Schermata Sorpresa */
+        #surprise-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .happy-new-year {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #d81b60;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            z-index: 5;
+            margin: 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Cuori cadenti */
+        .falling-heart {
+            position: absolute;
+            top: -50px;
+            font-size: 24px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        .error-msg {
+            color: #ff5252;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Accesso -->
+    <div id="login-screen">
+        <div class="heart-icon">🩶</div>
+        <h2>Inserisci la parola magica</h2>
+        <input type="password" id="psw-input" placeholder="La tua password...">
+        <br>
+        <button onclick="checkPassword()">Entra nel 2026</button>
+        <div id="error" class="error-msg">Ops! Riprova!</div>
+    </div>
+
+    <!-- Contenuto Sorpresa -->
+    <div id="surprise-screen">
+        <h1 class="happy-new-year">Happy New Year!</h1>
+        <p style="z-index: 5; font-size: 1.1rem; color: #880e4f;">Che sia un anno pieno di amore 🩶</p>
+    </div>
+
+    <script>
+        // --- CONFIGURAZIONE ---
+        // Puoi aggiungere qui tutte le versioni della password che vuoi
+        // Il sistema trasformerà tutto in minuscolo, quindi scrivi qui solo in minuscolo
+        const validPasswords = ["anna gioia de pretto 🩶"];
+
+        function checkPassword() {
+            const input = document.getElementById('psw-input').value.trim().toLowerCase();
+            const loginScreen = document.getElementById('login-screen');
+            const surpriseScreen = document.getElementById('surprise-screen');
+            const errorMsg = document.getElementById('error');
+
+            if (validPasswords.includes(input)) {
+                // Nascondi login
+                loginScreen.style.opacity = '0';
+                loginScreen.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    loginScreen.style.display = 'none';
+                    // Mostra sorpresa
+                    surpriseScreen.style.display = 'flex';
+                    setTimeout(() => {
+                        surpriseScreen.style.opacity = '1';
+                        startHeartRain();
+                    }, 50);
+                }, 800);
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('psw-input').value = '';
+                // Piccola vibrazione visiva per errore
+                loginScreen.style.animation = 'shake 0.4s';
+                setTimeout(() => loginScreen.style.animation = '', 400);
+            }
+        }
+
+        // Aggiungi supporto per il tasto Invio
+        document.getElementById('psw-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function startHeartRain() {
+            const container = document.body;
+            const hearts = ['🩶', '🤍', '✨', '💖'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'falling-heart';
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                
+                // Posizione orizzontale casuale
+                heart.style.left = Math.random() * 100 + 'vw';
+                
+                // Dimensione casuale
+                const size = (Math.random() * 20 + 15) + 'px';
+                heart.style.fontSize = size;
+                
+                // Durata caduta casuale tra 3 e 6 secondi
+                const duration = (Math.random() * 3 + 3) + 's';
+                heart.style.animation = `fall ${duration} linear forwards`;
+                
+                // Opacità casuale
+                heart.style.opacity = Math.random() * 0.5 + 0.5;
+
+                container.appendChild(heart);
+
+                // Rimuovi l'elemento dopo la fine dell'animazione
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 150);
+        }
+    </script>
+
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</body>
+</html>
